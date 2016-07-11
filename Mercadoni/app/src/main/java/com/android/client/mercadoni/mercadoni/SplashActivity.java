@@ -1,6 +1,7 @@
 package com.android.client.mercadoni.mercadoni;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,9 @@ import android.os.Handler;
 import android.view.View;
 
 public class SplashActivity extends AppCompatActivity {
+
+    private static final String TAG = "SplashActivity";
+    private static final long SPLASH_DISPLAY_LENGTH = 2500;
 
     /**
      * Some older devices needs a small delay between UI widget updates
@@ -42,7 +46,6 @@ public class SplashActivity extends AppCompatActivity {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-    private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
@@ -56,7 +59,6 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
-        mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
 
@@ -69,7 +71,15 @@ public class SplashActivity extends AppCompatActivity {
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+        delayedHide(10);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getBaseContext(), LoginActivity.class));
+                finish();
+            }
+        }, SPLASH_DISPLAY_LENGTH);
 
     }
 
@@ -80,7 +90,6 @@ public class SplashActivity extends AppCompatActivity {
             actionBar.hide();
         }
         mControlsView.setVisibility(View.GONE);
-        mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
